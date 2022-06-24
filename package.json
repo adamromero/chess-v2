@@ -1,0 +1,16 @@
+{
+   "name": "chess-v2",
+   "version": "1.0.0",
+   "description": "",
+   "main": "chess.js",
+   "scripts": {
+      "test": "jest"
+   },
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "devDependencies": {
+      "@babel/plugin-transform-modules-commonjs": "^7.18.2",
+      "jest": "^27.5.1"
+   }
+}
