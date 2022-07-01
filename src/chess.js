@@ -39,17 +39,53 @@ const addEventListeners = () => {
    cells.forEach((cell) => {
       cell.addEventListener("click", handleCellClick);
    });
+
+   boardElement.addEventListener("mouseout", (e) => {
+      const cells = document.querySelectorAll(".cell");
+      cells.forEach((cell) => {
+         if (!cell.classList.contains("highlight")) {
+            cell.classList.remove("highlight");
+         }
+      });
+   });
+};
+
+const removeAllSelected = () => {
+   const cells = document.querySelectorAll(".cell");
+   cells.forEach((cell) => {
+      cell.classList.remove("selected");
+   });
+};
+
+const removeAllHighlight = () => {
+   const cells = document.querySelectorAll(".cell");
+   cells.forEach((cell) => {
+      cell.classList.remove("highlight");
+   });
 };
 
 const handleCellClick = (e) => {
    const cell = e.target;
+   //check if cell contains a piece
    if (!cell.classList.contains("cell")) {
-      console.log(cell);
       const cellIndex = cell.parentNode.getAttribute("data-index");
-      const piece = pieces.find((p) => p.getPosition() === Number(cellIndex));
+      const selectedPiece = pieces.find(
+         (p) => p.getPosition() === parseInt(cellIndex)
+      );
 
-      if (piece) {
-         console.log(piece.getName());
+      if (selectedPiece) {
+         if (cell.parentNode.classList.contains("selected")) {
+            removeAllSelected();
+            removeAllHighlight();
+         } else {
+            removeAllSelected();
+            removeAllHighlight();
+            cell.parentNode.classList.add("selected");
+            selectedPiece.legalMoves().forEach((move) => {
+               const cell = document.querySelector(`[data-index='${move}']`);
+               cell.classList.add("highlight");
+            });
+         }
       }
    }
 };

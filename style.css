@@ -41,6 +41,24 @@ h1 {
    background: #636363;
 }
 
+img {
+   position: absolute;
+   transition: all 0.2s ease-in-out;
+   cursor: pointer;
+}
+
+.cell:hover img {
+   background: #699e69;
+}
+
+.cell.black:hover img {
+   background: #599059;
+}
+
+.highlight {
+   background: #699e69;
+}
+
 .cell.black.highlight {
    background: #599059;
 }
@@ -51,22 +69,10 @@ h1 {
    margin: auto;
 }
 
-.hovered {
-   border: 2px solid yellow;
-}
-
 .path {
    background: red !important;
 }
 
-.highlight {
-   background: #699e69;
-   cursor: pointer;
-}
-
-img {
-   position: absolute;
-}
 /*
 @media (max-width: 40.1em) {
    .board {
