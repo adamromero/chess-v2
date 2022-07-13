@@ -57,6 +57,7 @@ img {
 
 .highlight {
    background: #699e69;
+   cursor: pointer;
 }
 
 .cell.black.highlight {

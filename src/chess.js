@@ -3,6 +3,16 @@ import pieces from "./generatePieces.js";
 let boardElement = document.getElementById("board");
 const MAX_ROWS = 8;
 const MAX_COLS = 8;
+let boardArray = [
+   [0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0],
+   [0, 0, 0, 0, 0, 0, 0, 0],
+];
 
 const generateBoard = () => {
    let board = "";
@@ -16,21 +26,29 @@ const generateBoard = () => {
             cellColor = col % 2 !== 0 ? "" : "black";
          }
 
-         board += `<div class='cell ${cellColor}' data-index=${
-            row * MAX_COLS + col
-         }></div>`;
+         board += `<div class='cell ${cellColor}' data-index=${[
+            row,
+            col,
+         ]}></div>`;
       }
    }
 
    boardElement.innerHTML = board;
 };
 
+const updateBoard = () => {
+   pieces.forEach((piece) => {
+      const position = piece.getPosition();
+      boardArray[position[0]][position[1]] = piece.getId();
+   });
+};
+
 const placeChessPieces = () => {
    pieces.forEach((piece) => {
-      const cell = document.querySelector(
-         `[data-index='${piece.getPosition()}']`
-      );
-      cell.innerHTML = `<img src='${piece.getImage()}' alt='${piece.getName()}' />`;
+      const x = piece.getPosition()[0];
+      const y = piece.getPosition()[1];
+      const cell = document.querySelector(`[data-index='${[x, y]}']`);
+      cell.innerHTML = `<img src='${piece.getImage()}' alt='${piece.getId()}' />`;
    });
 };
 
@@ -68,10 +86,14 @@ const handleCellClick = (e) => {
    const cell = e.target;
    //check if cell contains a piece
    if (!cell.classList.contains("cell")) {
-      const cellIndex = cell.parentNode.getAttribute("data-index");
-      const selectedPiece = pieces.find(
-         (p) => p.getPosition() === parseInt(cellIndex)
-      );
+      const cellIndex = cell.parentNode.getAttribute("data-index").split(",");
+
+      const selectedPiece = pieces.find((p) => {
+         return (
+            p.getPosition()[0] === parseInt(cellIndex[0]) &&
+            p.getPosition()[1] === parseInt(cellIndex[1])
+         );
+      });
 
       if (selectedPiece) {
          if (cell.parentNode.classList.contains("selected")) {
@@ -81,9 +103,37 @@ const handleCellClick = (e) => {
             removeAllSelected();
             removeAllHighlight();
             cell.parentNode.classList.add("selected");
-            selectedPiece.legalMoves().forEach((move) => {
-               const cell = document.querySelector(`[data-index='${move}']`);
+
+            const legalMoves = selectedPiece.getLegalMoves();
+            if (legalMoves.length > 1) {
+               legalMoves.forEach((move) => {
+                  const cell = document.querySelector(`[data-index='${move}']`);
+                  cell.classList.add("highlight");
+               });
+            } else {
+               const cell = document.querySelector(
+                  `[data-index='${legalMoves[0]}']`
+               );
                cell.classList.add("highlight");
+            }
+
+            document.querySelectorAll(".highlight").forEach((highlight) => {
+               highlight.addEventListener("click", (e) => {
+                  const selectedPieceElement = cell.parentNode.childNodes[0];
+                  if (highlight.classList.contains("highlight")) {
+                     highlight.appendChild(selectedPieceElement);
+                     const index = highlight
+                        .getAttribute("data-index")
+                        .split(",");
+                     const newPosition = [
+                        parseInt(index[0]),
+                        parseInt(index[1]),
+                     ];
+                     selectedPiece.setPosition(newPosition);
+                     removeAllSelected();
+                     removeAllHighlight();
+                  }
+               });
             });
          }
       }
@@ -93,6 +143,7 @@ const handleCellClick = (e) => {
 const init = () => {
    generateBoard();
    placeChessPieces();
+   updateBoard();
    addEventListeners();
 };
 
