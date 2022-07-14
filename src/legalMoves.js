@@ -6,27 +6,34 @@ import {
 } from "./openMoves.js";
 
 const pawnLegalMoves = (piece) => {
+   let moves = [];
    const x = piece.position[0];
    const y = piece.position[1];
    if (piece.color === "white") {
       if (x === 6) {
-         return [
-            [x - 1, y],
-            [x - 2, y],
-         ];
+         moves.push([x - 1, y]);
+         moves.push([x - 2, y]);
+         moves = getOpenMoves(moves);
+         return moves;
       } else {
          if (isMoveOpen([x - 1, y])) {
-            return [[x - 1, y]];
+            moves.push([x - 1, y]);
+            moves = getOpenMoves(moves);
+            return moves;
          }
       }
    } else {
       if (x === 1) {
-         return [
-            [x + 1, y],
-            [x + 2, y],
-         ];
+         moves.push([x + 1, y]);
+         moves.push([x + 2, y]);
+         moves = getOpenMoves(moves);
+         return moves;
       } else {
-         return [[x + 1, y]];
+         if (isMoveOpen([x + 1, y])) {
+            moves.push([x + 1, y]);
+            moves = getOpenMoves(moves);
+            return moves;
+         }
       }
    }
 };
@@ -54,17 +61,10 @@ const bishopLegalMoves = (piece) => {
    const x = piece.position[0];
    const y = piece.position[1];
    for (let i = 1; i < 8; i++) {
-      if (piece.color === "white") {
-         moves.push([x - i, y - i]);
-         moves.push([x - i, y + i]);
-         moves.push([x + i, y - i]);
-         moves.push([x + i, y + i]);
-      } else {
-         moves.push([x + i, y + i]);
-         moves.push([x + i, y - i]);
-         moves.push([x - i, y + i]);
-         moves.push([x - i, y - i]);
-      }
+      moves.push([x + i, y + i]);
+      moves.push([x + i, y - i]);
+      moves.push([x - i, y + i]);
+      moves.push([x - i, y - i]);
    }
    moves = getInBoundMoves(moves);
    moves = getOpenMoves(moves);
@@ -89,4 +89,55 @@ const knightLegalMoves = (piece) => {
    return moves;
 };
 
-export { pawnLegalMoves, rookLegalMoves, bishopLegalMoves, knightLegalMoves };
+const queenLegalMoves = (piece) => {
+   let moves = [];
+   const x = piece.position[0];
+   const y = piece.position[1];
+
+   for (let i = 1; i < 8; i++) {
+      moves.push([x + i, y]);
+      moves.push([x - i, y]);
+   }
+   for (let i = 1; i < 8; i++) {
+      moves.push([x, y + i]);
+      moves.push([x, y - i]);
+   }
+
+   for (let i = 1; i < 8; i++) {
+      moves.push([x + i, y + i]);
+      moves.push([x + i, y - i]);
+      moves.push([x - i, y + i]);
+      moves.push([x - i, y - i]);
+   }
+
+   moves = getInBoundMoves(moves);
+   moves = getOpenMoves(moves);
+   moves = getUnblockedMoves(moves);
+   return moves;
+};
+
+const kingLegalMoves = (piece) => {
+   let moves = [];
+   const x = piece.position[0];
+   const y = piece.position[1];
+   moves.push([x - 1, y - 1]);
+   moves.push([x - 1, y]);
+   moves.push([x - 1, y + 1]);
+   moves.push([x, y - 1]);
+   moves.push([x, y + 1]);
+   moves.push([x + 1, y - 1]);
+   moves.push([x + 1, y]);
+   moves.push([x + 1, y + 1]);
+   moves = getInBoundMoves(moves);
+   moves = getOpenMoves(moves);
+   return moves;
+};
+
+export {
+   pawnLegalMoves,
+   rookLegalMoves,
+   bishopLegalMoves,
+   knightLegalMoves,
+   queenLegalMoves,
+   kingLegalMoves,
+};
