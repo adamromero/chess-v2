@@ -22,7 +22,7 @@ export const getUnblockedMoves = (moves) => {
       if (isMoveOpen(moves[i])) {
          openMoves.push(moves[i]);
       } else {
-         //break;
+         break;
       }
    }
 

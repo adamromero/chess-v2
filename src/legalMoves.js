@@ -40,19 +40,38 @@ const pawnLegalMoves = (piece) => {
 
 const rookLegalMoves = (piece) => {
    let moves = [];
+   let topMoves = [];
+   let bottomMoves = [];
+   let leftMoves = [];
+   let rightMoves = [];
+
    const x = piece.position[0];
    const y = piece.position[1];
 
-   for (let i = 1; i < 8; i++) {
-      moves.push([x + i, y]);
-      moves.push([x - i, y]);
+   for (let i = x - 1; i >= 0; i--) {
+      topMoves.push([i, y]);
    }
-   for (let i = 1; i < 8; i++) {
-      moves.push([x, y + i]);
-      moves.push([x, y - i]);
+
+   for (let i = x + 1; i < 8; i++) {
+      bottomMoves.push([i, y]);
    }
+
+   for (let i = y - 1; i >= 0; i--) {
+      leftMoves.push([x, i]);
+   }
+
+   for (let i = y + 1; i < 8; i++) {
+      rightMoves.push([x, i]);
+   }
+
+   moves = [
+      ...getUnblockedMoves(topMoves),
+      ...getUnblockedMoves(bottomMoves),
+      ...getUnblockedMoves(leftMoves),
+      ...getUnblockedMoves(rightMoves),
+   ];
+
    moves = getInBoundMoves(moves);
-   moves = getUnblockedMoves(moves);
    return moves;
 };
 
@@ -60,15 +79,26 @@ const bishopLegalMoves = (piece) => {
    let moves = [];
    const x = piece.position[0];
    const y = piece.position[1];
+
+   let topLeftMoves = [];
+   let topRightMoves = [];
+   let bottomLeftMoves = [];
+   let bottomRightMoves = [];
+
    for (let i = 1; i < 8; i++) {
-      moves.push([x + i, y + i]);
-      moves.push([x + i, y - i]);
-      moves.push([x - i, y + i]);
-      moves.push([x - i, y - i]);
+      topLeftMoves.push([x - i, y - i]);
+      topRightMoves.push([x + i, y - i]);
+      bottomLeftMoves.push([x - i, y + i]);
+      bottomRightMoves.push([x + i, y + i]);
    }
-   moves = getInBoundMoves(moves);
-   moves = getOpenMoves(moves);
-   moves = getUnblockedMoves(moves);
+
+   moves = [
+      ...getUnblockedMoves(getInBoundMoves(topLeftMoves)),
+      ...getUnblockedMoves(getInBoundMoves(topRightMoves)),
+      ...getUnblockedMoves(getInBoundMoves(bottomLeftMoves)),
+      ...getUnblockedMoves(getInBoundMoves(bottomRightMoves)),
+   ];
+
    return moves;
 };
 
@@ -91,28 +121,7 @@ const knightLegalMoves = (piece) => {
 
 const queenLegalMoves = (piece) => {
    let moves = [];
-   const x = piece.position[0];
-   const y = piece.position[1];
-
-   for (let i = 1; i < 8; i++) {
-      moves.push([x + i, y]);
-      moves.push([x - i, y]);
-   }
-   for (let i = 1; i < 8; i++) {
-      moves.push([x, y + i]);
-      moves.push([x, y - i]);
-   }
-
-   for (let i = 1; i < 8; i++) {
-      moves.push([x + i, y + i]);
-      moves.push([x + i, y - i]);
-      moves.push([x - i, y + i]);
-      moves.push([x - i, y - i]);
-   }
-
-   moves = getInBoundMoves(moves);
-   moves = getOpenMoves(moves);
-   moves = getUnblockedMoves(moves);
+   moves = [...rookLegalMoves(piece), ...bishopLegalMoves(piece)];
    return moves;
 };
 
