@@ -3,7 +3,7 @@ import boardMap from "./boardMap.js";
 export const isMoveOpen = (move) => {
    const x = move[0];
    const y = move[1];
-   return boardMap[x][y] === 0;
+   return boardMap[x][y] === "";
 };
 
 export const getOpenMoves = (moves) => {
@@ -13,7 +13,6 @@ export const getOpenMoves = (moves) => {
          openMoves.push(moves[i]);
       }
    }
-   console.log(openMoves);
    return openMoves;
 };
 
