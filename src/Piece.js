@@ -1,4 +1,11 @@
-import { pawnLegalMoves, bishopLegalMoves } from "./legalMoves.js";
+import {
+   pawnLegalMoves,
+   rookLegalMoves,
+   bishopLegalMoves,
+   knightLegalMoves,
+   queenLegalMoves,
+   kingLegalMoves,
+} from "./legalMoves.js";
 
 class Piece {
    constructor(name, color, position, image) {
@@ -25,26 +32,15 @@ class Piece {
       if (this.name === "pawn") {
          return pawnLegalMoves(this);
       } else if (this.name === "rook") {
-         let moves = [];
-         const x = this.position[0];
-         const y = this.position[1];
-         for (let i = 0; i < 8; i++) {
-            moves.push([x - i, y]);
-         }
-         return moves;
+         return rookLegalMoves(this);
       } else if (this.name === "knight") {
-         let moves = [];
-         moves.push(this.position - 17);
-         moves.push(this.position - 15);
-         moves.push(this.position - 10);
-         moves.push(this.position - 6);
-         moves.push(this.position + 6);
-         moves.push(this.position + 10);
-         moves.push(this.position + 15);
-         moves.push(this.position + 17);
-         return moves;
+         return knightLegalMoves(this);
       } else if (this.name === "bishop") {
          return bishopLegalMoves(this);
+      } else if (this.name === "queen") {
+         return queenLegalMoves(this);
+      } else if (this.name === "king") {
+         return kingLegalMoves(this);
       }
       return [];
    };

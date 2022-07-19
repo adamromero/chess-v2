@@ -6,21 +6,37 @@ export const isMoveOpen = (move) => {
    return boardMap[x][y] === "";
 };
 
-export const getOpenMoves = (moves) => {
+export const isOpponentPiece = (move, color) => {
+   const x = move[0];
+   const y = move[1];
+   if (boardMap[x][y] !== "") {
+      if (!boardMap[x][y].includes(color)) {
+         return true;
+      }
+   }
+   return false;
+};
+
+export const getOpenMoves = (moves, color) => {
    let openMoves = [];
    for (let i = 0; i < moves.length; i++) {
-      if (isMoveOpen(moves[i])) {
+      if (isMoveOpen(moves[i]) || isOpponentPiece(moves[i], color)) {
          openMoves.push(moves[i]);
       }
    }
    return openMoves;
 };
 
-export const getUnblockedMoves = (moves) => {
+export const getUnblockedMoves = (moves, color) => {
    let openMoves = [];
+   let isOpponentPieceFound = false;
    for (let i = 0; i < moves.length; i++) {
+      isOpponentPiece(moves[i], color);
       if (isMoveOpen(moves[i])) {
          openMoves.push(moves[i]);
+      } else if (isOpponentPiece(moves[i], color) && !isOpponentPieceFound) {
+         openMoves.push(moves[i]);
+         isOpponentPieceFound = true;
       } else {
          break;
       }

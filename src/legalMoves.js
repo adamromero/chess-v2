@@ -65,10 +65,10 @@ const rookLegalMoves = (piece) => {
    }
 
    moves = [
-      ...getUnblockedMoves(topMoves),
-      ...getUnblockedMoves(bottomMoves),
-      ...getUnblockedMoves(leftMoves),
-      ...getUnblockedMoves(rightMoves),
+      ...getUnblockedMoves(topMoves, piece.color),
+      ...getUnblockedMoves(bottomMoves, piece.color),
+      ...getUnblockedMoves(leftMoves, piece.color),
+      ...getUnblockedMoves(rightMoves, piece.color),
    ];
 
    moves = getInBoundMoves(moves);
@@ -93,10 +93,10 @@ const bishopLegalMoves = (piece) => {
    }
 
    moves = [
-      ...getUnblockedMoves(getInBoundMoves(topLeftMoves)),
-      ...getUnblockedMoves(getInBoundMoves(topRightMoves)),
-      ...getUnblockedMoves(getInBoundMoves(bottomLeftMoves)),
-      ...getUnblockedMoves(getInBoundMoves(bottomRightMoves)),
+      ...getUnblockedMoves(getInBoundMoves(topLeftMoves), piece.color),
+      ...getUnblockedMoves(getInBoundMoves(topRightMoves), piece.color),
+      ...getUnblockedMoves(getInBoundMoves(bottomLeftMoves), piece.color),
+      ...getUnblockedMoves(getInBoundMoves(bottomRightMoves), piece.color),
    ];
 
    return moves;
@@ -115,14 +115,12 @@ const knightLegalMoves = (piece) => {
    moves.push([x + 2, y - 1]);
    moves.push([x + 1, y - 2]);
    moves = getInBoundMoves(moves);
-   moves = getOpenMoves(moves);
+   moves = getOpenMoves(moves, piece.color);
    return moves;
 };
 
 const queenLegalMoves = (piece) => {
-   let moves = [];
-   moves = [...rookLegalMoves(piece), ...bishopLegalMoves(piece)];
-   return moves;
+   return [...rookLegalMoves(piece), ...bishopLegalMoves(piece)];
 };
 
 const kingLegalMoves = (piece) => {
@@ -138,7 +136,7 @@ const kingLegalMoves = (piece) => {
    moves.push([x + 1, y]);
    moves.push([x + 1, y + 1]);
    moves = getInBoundMoves(moves);
-   moves = getOpenMoves(moves);
+   moves = getOpenMoves(moves, piece.color);
    return moves;
 };
 
