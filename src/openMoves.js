@@ -31,8 +31,7 @@ export const getUnblockedMoves = (moves, color) => {
    let openMoves = [];
    let isOpponentPieceFound = false;
    for (let i = 0; i < moves.length; i++) {
-      isOpponentPiece(moves[i], color);
-      if (isMoveOpen(moves[i])) {
+      if (isMoveOpen(moves[i]) && !isOpponentPieceFound) {
          openMoves.push(moves[i]);
       } else if (isOpponentPiece(moves[i], color) && !isOpponentPieceFound) {
          openMoves.push(moves[i]);
