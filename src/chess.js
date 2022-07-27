@@ -4,6 +4,8 @@ import boardMap from "./boardMap.js";
 let boardElement = document.getElementById("board");
 const MAX_ROWS = 8;
 const MAX_COLS = 8;
+const players = ["white", "black"];
+let turn = 0;
 
 const generateBoard = () => {
    let board = "";
@@ -49,7 +51,7 @@ const placeChessPieces = () => {
       const x = piece.getPosition()[0];
       const y = piece.getPosition()[1];
       const cell = document.querySelector(`[data-index='${[x, y]}']`);
-      cell.innerHTML = `<img class="piece" src='${piece.getImage()}' alt='${piece.getId()}' />`;
+      cell.innerHTML = `<img class="piece ${piece.getColor()}" src='${piece.getImage()}' alt='${piece.getId()}' />`;
    });
 };
 
@@ -65,6 +67,9 @@ const highlightEventListener = (e) => {
    highlight.forEach((highlight) => {
       highlight.addEventListener("click", (e) => {
          const selectedHighlight = e.target;
+
+         //console.log(selectedHighlight);
+
          if (selectedHighlight.classList.contains("highlight")) {
             const selectedPieceElement =
                document.querySelector(".selected").childNodes[0];
@@ -83,6 +88,7 @@ const highlightEventListener = (e) => {
             updateBoard();
             removeAllSelected();
             removeAllHighlight();
+            turn++;
          }
       });
    });
@@ -115,34 +121,38 @@ const getSelectedPiece = (selectedPiecePosition) => {
 
 const handleCellClick = (e) => {
    const cell = e.target;
-   //check if cell contains a piece
-   if (cell.classList.contains("piece")) {
-      const selectedPiecePosition = cell.parentNode
-         .getAttribute("data-index")
-         .split(",");
+   if (cell.classList.contains(players[turn % 2])) {
+      if (cell.classList.contains("piece")) {
+         const selectedPiecePosition = cell.parentNode
+            .getAttribute("data-index")
+            .split(",");
 
-      const selectedPiece = getSelectedPiece(selectedPiecePosition);
-      if (selectedPiece) {
-         if (cell.parentNode.classList.contains("selected")) {
-            removeAllSelected();
-            removeAllHighlight();
-         } else {
-            removeAllSelected();
-            removeAllHighlight();
-            cell.parentNode.classList.add("selected");
+         const selectedPiece = getSelectedPiece(selectedPiecePosition);
+         if (selectedPiece) {
+            if (cell.parentNode.classList.contains("selected")) {
+               removeAllSelected();
+               removeAllHighlight();
+            } else {
+               removeAllSelected();
+               removeAllHighlight();
+               cell.parentNode.classList.add("selected");
 
-            let currentCell;
-            const legalMoves = selectedPiece.getLegalMoves();
+               let currentCell;
+               const legalMoves = selectedPiece.getLegalMoves();
 
-            legalMoves.forEach((move) => {
-               currentCell = document.querySelector(`[data-index='${move}']`);
-               currentCell.classList.add("highlight");
-            });
+               legalMoves.forEach((move) => {
+                  currentCell = document.querySelector(
+                     `[data-index='${move}']`
+                  );
+                  currentCell.classList.add("highlight");
+               });
 
-            highlightEventListener();
+               highlightEventListener();
+            }
          }
       }
    }
+
    e.stopPropagation();
 };
 
