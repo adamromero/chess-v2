@@ -9,9 +9,11 @@ export const isMoveOpen = (move) => {
 export const isOpponentPiece = (move, color) => {
    const x = move[0];
    const y = move[1];
-   if (boardMap[x][y] !== "") {
-      if (!boardMap[x][y].includes(color)) {
-         return true;
+   if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {
+      if (boardMap[x][y] !== "") {
+         if (!boardMap[x][y].includes(color)) {
+            return true;
+         }
       }
    }
    return false;

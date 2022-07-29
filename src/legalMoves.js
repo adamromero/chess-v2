@@ -17,11 +17,11 @@ const pawnLegalMoves = (piece) => {
          moves = getOpenMoves(moves);
          return moves;
       } else {
-         if (isOpponentPiece([x - 1, y - 1])) {
+         if (isOpponentPiece([x - 1, y - 1], piece.color)) {
             moves.push([x - 1, y - 1]);
             moves = getOpenMoves(moves);
          }
-         if (isOpponentPiece([x - 1, y + 1])) {
+         if (isOpponentPiece([x - 1, y + 1], piece.color)) {
             moves.push([x - 1, y + 1]);
             moves = getOpenMoves(moves);
          }
@@ -38,11 +38,11 @@ const pawnLegalMoves = (piece) => {
          moves = getOpenMoves(moves);
          return moves;
       } else {
-         if (isOpponentPiece([x + 1, y + 1])) {
+         if (isOpponentPiece([x + 1, y + 1], piece.color)) {
             moves.push([x + 1, y + 1]);
             moves = getOpenMoves(moves);
          }
-         if (isOpponentPiece([x + 1, y - 1])) {
+         if (isOpponentPiece([x + 1, y - 1], piece.color)) {
             moves.push([x + 1, y - 1]);
             moves = getOpenMoves(moves);
          }
