@@ -30,8 +30,10 @@ class Piece {
 
    getLegalMoves = () => {
       if (this.name === "pawn") {
+         console.log("pawnLegalMoves");
          return pawnLegalMoves(this);
       } else if (this.name === "rook") {
+         console.log("rookLegalMoves");
          return rookLegalMoves(this);
       } else if (this.name === "knight") {
          return knightLegalMoves(this);

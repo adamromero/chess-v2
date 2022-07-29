@@ -1,4 +1,4 @@
-import pieces from "./generatePieces.js";
+import { setPieces, getPieces } from "./generatePieces.js";
 import boardMap from "./boardMap.js";
 
 let boardElement = document.getElementById("board");
@@ -39,7 +39,7 @@ const clearBoard = () => {
 
 const updateBoard = () => {
    clearBoard();
-   pieces.forEach((piece) => {
+   getPieces().forEach((piece) => {
       const x = piece.getPosition()[0];
       const y = piece.getPosition()[1];
       boardMap[x][y] = `${piece.getName()}_${piece.getColor()}`;
@@ -47,7 +47,7 @@ const updateBoard = () => {
 };
 
 const placeChessPieces = () => {
-   pieces.forEach((piece) => {
+   getPieces().forEach((piece) => {
       const x = piece.getPosition()[0];
       const y = piece.getPosition()[1];
       const cell = document.querySelector(`[data-index='${[x, y]}']`);
@@ -62,13 +62,16 @@ const addEventListeners = () => {
    });
 };
 
+const updateMessage = () => {
+   const message = document.getElementById("message");
+   message.innerHTML = `${players[turn % 2]}'s turn`;
+};
+
 const highlightEventListener = (e) => {
    const highlight = document.querySelectorAll(".highlight");
    highlight.forEach((highlight) => {
       highlight.addEventListener("click", (e) => {
          const selectedHighlight = e.target;
-
-         //console.log(selectedHighlight);
 
          if (selectedHighlight.classList.contains("highlight")) {
             const selectedPieceElement =
@@ -89,6 +92,39 @@ const highlightEventListener = (e) => {
             removeAllSelected();
             removeAllHighlight();
             turn++;
+            updateMessage();
+         }
+
+         const selectedHighlightCell = selectedHighlight.parentNode;
+         if (
+            selectedHighlightCell &&
+            selectedHighlightCell.classList.contains("highlight")
+         ) {
+            const selectedPieceElement =
+               document.querySelector(".selected").childNodes[0];
+            const selectedPiecePosition = document
+               .querySelector(".selected")
+               .getAttribute("data-index")
+               .split(",");
+
+            //const selectedHighlightCell = selectedHighlight.parentNode;
+            selectedHighlight.remove();
+            selectedHighlightCell.appendChild(selectedPieceElement);
+
+            const index = selectedHighlightCell
+               .getAttribute("data-index")
+               .split(",");
+
+            const newPosition = [parseInt(index[0]), parseInt(index[1])];
+            removeSelectedPiece(newPosition);
+
+            const selectedPiece = getSelectedPiece(selectedPiecePosition);
+            selectedPiece.setPosition(newPosition);
+            updateBoard();
+            removeAllSelected();
+            removeAllHighlight();
+            turn++;
+            updateMessage();
          }
       });
    });
@@ -109,7 +145,7 @@ const removeAllHighlight = () => {
 };
 
 const getSelectedPiece = (selectedPiecePosition) => {
-   const selectedPiece = pieces.find((p) => {
+   const selectedPiece = getPieces().find((p) => {
       return (
          p.getPosition()[0] === parseInt(selectedPiecePosition[0]) &&
          p.getPosition()[1] === parseInt(selectedPiecePosition[1])
@@ -117,6 +153,15 @@ const getSelectedPiece = (selectedPiecePosition) => {
    });
 
    return selectedPiece;
+};
+
+const removeSelectedPiece = (selectedPiecePosition) => {
+   const pieceToRemove = getSelectedPiece(selectedPiecePosition);
+   const remainingPieces = getPieces().filter((p) => {
+      return p !== pieceToRemove;
+   });
+
+   setPieces(remainingPieces);
 };
 
 const handleCellClick = (e) => {
@@ -159,6 +204,7 @@ const handleCellClick = (e) => {
 const init = () => {
    generateBoard();
    placeChessPieces();
+   updateMessage();
    updateBoard();
    addEventListeners();
 };

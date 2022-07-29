@@ -28,4 +28,10 @@ pieces.push(new Piece("bishop", "white", [7, 5], "/pieces/wb.png"));
 pieces.push(new Piece("queen", "white", [7, 3], "/pieces/wq.png"));
 pieces.push(new Piece("king", "white", [7, 4], "/pieces/wkg.png"));
 
-export default pieces;
+export const setPieces = (newPieces) => {
+   pieces = newPieces;
+};
+
+export const getPieces = () => {
+   return pieces;
+};
