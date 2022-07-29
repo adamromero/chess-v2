@@ -107,7 +107,6 @@ const highlightEventListener = (e) => {
                .getAttribute("data-index")
                .split(",");
 
-            //const selectedHighlightCell = selectedHighlight.parentNode;
             selectedHighlight.remove();
             selectedHighlightCell.appendChild(selectedPieceElement);
 

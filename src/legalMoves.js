@@ -3,6 +3,7 @@ import {
    getOpenMoves,
    getUnblockedMoves,
    getInBoundMoves,
+   isOpponentPiece,
 } from "./openMoves.js";
 
 const pawnLegalMoves = (piece) => {
@@ -16,11 +17,19 @@ const pawnLegalMoves = (piece) => {
          moves = getOpenMoves(moves);
          return moves;
       } else {
+         if (isOpponentPiece([x - 1, y - 1])) {
+            moves.push([x - 1, y - 1]);
+            moves = getOpenMoves(moves);
+         }
+         if (isOpponentPiece([x - 1, y + 1])) {
+            moves.push([x - 1, y + 1]);
+            moves = getOpenMoves(moves);
+         }
          if (isMoveOpen([x - 1, y])) {
             moves.push([x - 1, y]);
             moves = getOpenMoves(moves);
-            return moves;
          }
+         return moves;
       }
    } else {
       if (x === 1) {
@@ -29,11 +38,19 @@ const pawnLegalMoves = (piece) => {
          moves = getOpenMoves(moves);
          return moves;
       } else {
+         if (isOpponentPiece([x + 1, y + 1])) {
+            moves.push([x + 1, y + 1]);
+            moves = getOpenMoves(moves);
+         }
+         if (isOpponentPiece([x + 1, y - 1])) {
+            moves.push([x + 1, y - 1]);
+            moves = getOpenMoves(moves);
+         }
          if (isMoveOpen([x + 1, y])) {
             moves.push([x + 1, y]);
             moves = getOpenMoves(moves);
-            return moves;
          }
+         return moves;
       }
    }
 };
