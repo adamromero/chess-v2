@@ -29,6 +29,18 @@ export const getOpenMoves = (moves, color) => {
    return openMoves;
 };
 
+export const getUnblockedPawnMoves = (moves) => {
+   let openMoves = [];
+   for (let i = 0; i < moves.length; i++) {
+      if (isMoveOpen(moves[i])) {
+         openMoves.push(moves[i]);
+      } else {
+         return openMoves;
+      }
+   }
+   return openMoves;
+};
+
 export const getUnblockedMoves = (moves, color) => {
    let openMoves = [];
    let isOpponentPieceFound = false;
@@ -39,7 +51,7 @@ export const getUnblockedMoves = (moves, color) => {
          openMoves.push(moves[i]);
          isOpponentPieceFound = true;
       } else {
-         break;
+         return openMoves;
       }
    }
 

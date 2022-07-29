@@ -2,6 +2,7 @@ import {
    isMoveOpen,
    getOpenMoves,
    getUnblockedMoves,
+   getUnblockedPawnMoves,
    getInBoundMoves,
    isOpponentPiece,
 } from "./openMoves.js";
@@ -14,44 +15,42 @@ const pawnLegalMoves = (piece) => {
       if (x === 6) {
          moves.push([x - 1, y]);
          moves.push([x - 2, y]);
+         moves = getUnblockedPawnMoves(moves);
+      } else if (isMoveOpen([x - 1, y])) {
+         moves.push([x - 1, y]);
          moves = getOpenMoves(moves);
-         return moves;
-      } else {
-         if (isOpponentPiece([x - 1, y - 1], piece.color)) {
-            moves.push([x - 1, y - 1]);
-            moves = getOpenMoves(moves);
-         }
-         if (isOpponentPiece([x - 1, y + 1], piece.color)) {
-            moves.push([x - 1, y + 1]);
-            moves = getOpenMoves(moves);
-         }
-         if (isMoveOpen([x - 1, y])) {
-            moves.push([x - 1, y]);
-            moves = getOpenMoves(moves);
-         }
-         return moves;
       }
+
+      if (isOpponentPiece([x - 1, y - 1], piece.color)) {
+         moves.push([x - 1, y - 1]);
+         moves = getOpenMoves(moves);
+      }
+      if (isOpponentPiece([x - 1, y + 1], piece.color)) {
+         moves.push([x - 1, y + 1]);
+         moves = getOpenMoves(moves);
+      }
+
+      return moves;
    } else {
       if (x === 1) {
          moves.push([x + 1, y]);
          moves.push([x + 2, y]);
+         moves = getUnblockedPawnMoves(moves);
+      } else if (isMoveOpen([x + 1, y])) {
+         moves.push([x + 1, y]);
          moves = getOpenMoves(moves);
-         return moves;
-      } else {
-         if (isOpponentPiece([x + 1, y + 1], piece.color)) {
-            moves.push([x + 1, y + 1]);
-            moves = getOpenMoves(moves);
-         }
-         if (isOpponentPiece([x + 1, y - 1], piece.color)) {
-            moves.push([x + 1, y - 1]);
-            moves = getOpenMoves(moves);
-         }
-         if (isMoveOpen([x + 1, y])) {
-            moves.push([x + 1, y]);
-            moves = getOpenMoves(moves);
-         }
-         return moves;
       }
+
+      if (isOpponentPiece([x + 1, y + 1], piece.color)) {
+         moves.push([x + 1, y + 1]);
+         moves = getOpenMoves(moves);
+      }
+      if (isOpponentPiece([x + 1, y - 1], piece.color)) {
+         moves.push([x + 1, y - 1]);
+         moves = getOpenMoves(moves);
+      }
+
+      return moves;
    }
 };
 

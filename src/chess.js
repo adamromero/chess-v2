@@ -6,6 +6,7 @@ const MAX_ROWS = 8;
 const MAX_COLS = 8;
 const players = ["white", "black"];
 let turn = 0;
+let legalMoves = [];
 
 const generateBoard = () => {
    let board = "";
@@ -62,9 +63,9 @@ const addEventListeners = () => {
    });
 };
 
-const updateMessage = () => {
+const updateMessage = (str) => {
    const message = document.getElementById("message");
-   message.innerHTML = `${players[turn % 2]}'s turn`;
+   message.innerHTML = str;
 };
 
 const highlightEventListener = (e) => {
@@ -92,7 +93,9 @@ const highlightEventListener = (e) => {
             removeAllSelected();
             removeAllHighlight();
             turn++;
-            updateMessage();
+            updateMessage(
+               isInCheck(legalMoves) ? "Check" : `${players[turn % 2]}'s turn`
+            );
          }
 
          const selectedHighlightCell = selectedHighlight.parentNode;
@@ -123,7 +126,9 @@ const highlightEventListener = (e) => {
             removeAllSelected();
             removeAllHighlight();
             turn++;
-            updateMessage();
+            updateMessage(
+               isInCheck(legalMoves) ? "Check" : `${players[turn % 2]}'s turn`
+            );
          }
       });
    });
@@ -163,6 +168,32 @@ const removeSelectedPiece = (selectedPiecePosition) => {
    setPieces(remainingPieces);
 };
 
+const isInCheck = (moves) => {
+   for (let i = 0; i < moves.length; i++) {
+      const move = moves[i];
+      const x = move[0];
+      const y = move[1];
+      const piece = boardMap[x][y];
+      if (piece.includes("king")) {
+         return true;
+      }
+   }
+
+   return false;
+};
+
+const gameOver = () => {
+   for (let i = 0; i < boardMap.length; i++) {
+      for (let j = 0; j < boardMap[i].length; j++) {
+         const piece = boardMap[i][j];
+         //console.log(piece);
+         if (piece.includes("king")) {
+            //return false;
+         }
+      }
+   }
+};
+
 const handleCellClick = (e) => {
    const cell = e.target;
    if (cell.classList.contains(players[turn % 2])) {
@@ -182,7 +213,7 @@ const handleCellClick = (e) => {
                cell.parentNode.classList.add("selected");
 
                let currentCell;
-               const legalMoves = selectedPiece.getLegalMoves();
+               legalMoves = selectedPiece.getLegalMoves();
 
                legalMoves.forEach((move) => {
                   currentCell = document.querySelector(
@@ -190,7 +221,7 @@ const handleCellClick = (e) => {
                   );
                   currentCell.classList.add("highlight");
                });
-
+               gameOver();
                highlightEventListener();
             }
          }
@@ -203,7 +234,7 @@ const handleCellClick = (e) => {
 const init = () => {
    generateBoard();
    placeChessPieces();
-   updateMessage();
+   updateMessage(`${players[turn % 2]}'s turn`);
    updateBoard();
    addEventListeners();
 };
